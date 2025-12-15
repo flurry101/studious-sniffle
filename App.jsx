@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Menu, X, ChevronDown, CassetteTape, MonitorSmartphone, 
   ArrowDown, Search, Compass, Palette, Rocket, TrendingUp, 
@@ -255,6 +255,74 @@ export default function App() {
       document.body.style.overflow = 'auto';
     }
   }, [mobileMenuOpen, activeModal]);
+
+  /* Init EmailJS (replace with your public key if different)
+  useEffect(() => {
+    try {
+      (function() {
+        emailjs.init("1lC3uJcEscqQf7Rhe");
+      })();
+    } catch (err) {
+      console.warn('EmailJS init failed', err);
+    }
+  }, []);*/
+
+  const formRef = useRef(null);
+  const [formStatusText, setFormStatusText] = useState('');
+  const [formStatusColor, setFormStatusColor] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setFormStatusText('Sending...');
+    setFormStatusColor('#33ef5cff');
+
+    const formEl = formRef.current;
+
+    // Build a plain object of the form values
+    const formData = {
+      first_name: formEl.elements['first_name']?.value || '',
+      last_name: formEl.elements['last_name']?.value || '',
+      email: formEl.elements['email']?.value || '',
+      phone: formEl.elements['phone']?.value || '',
+      subject: formEl.elements['subject']?.value || '',
+      message: formEl.elements['message']?.value || '',
+      timestamp: new Date().toISOString()
+    };
+
+    // Log all form data to console
+    console.log('=== CONTACT FORM SUBMISSION ===');
+    console.log('Form Data:', formData);
+    console.log('First Name:', formData.first_name);
+    console.log('Last Name:', formData.last_name);
+    console.log('Email:', formData.email);
+    console.log('Phone:', formData.phone);
+    console.log('Subject:', formData.subject);
+    console.log('Message:', formData.message);
+    console.log('Timestamp:', formData.timestamp);
+    console.log('===============================');
+
+    // Also POST the data to local server to save as JSON
+    try {
+      const response = await fetch('http://localhost:4000/save-form', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      
+      if (response.ok) {
+        console.log('✅ Form data saved to JSON file successfully');
+        setFormStatusText('✅ Message sent successfully!');
+        setFormStatusColor('green');
+        formEl.reset();
+      } else {
+        throw new Error('Server responded with error');
+      }
+    } catch (err) {
+      console.error('❌ Failed to save form:', err);
+      setFormStatusText('❌ Failed to send message. Please try again later.');
+      setFormStatusColor('red');
+    }
+  };
 
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
 
@@ -664,41 +732,46 @@ export default function App() {
           </div>
 
           <div className="lg:w-1/2 w-full bg-white/5 p-8 rounded-3xl border border-white/10 backdrop-blur-sm">
-            <form className="space-y-6">
+            <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="text-sm text-gray-400">First Name</label>
-                  <input type="text" placeholder="Jane" className="w-full bg-transparent border border-gray-600 rounded-full px-4 py-3 focus:border-[#CDB7FF] focus:outline-none transition-colors" />
+                  <input type="text" name="first_name" placeholder="Jane" className="w-full bg-transparent border border-gray-600 rounded-full px-4 py-3 focus:border-[#CDB7FF] focus:outline-none transition-colors" required />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm text-gray-400">Last Name</label>
-                  <input type="text" placeholder="Doe" className="w-full bg-transparent border border-gray-600 rounded-full px-4 py-3 focus:border-[#CDB7FF] focus:outline-none transition-colors" />
+                  <input type="text" name="last_name" placeholder="Doe" className="w-full bg-transparent border border-gray-600 rounded-full px-4 py-3 focus:border-[#CDB7FF] focus:outline-none transition-colors" required />
                 </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                    <label className="text-sm text-gray-400">Email Address</label>
-                   <input type="email" placeholder="hello@example.com" className="w-full bg-transparent border border-gray-600 rounded-full px-4 py-3 focus:border-[#CDB7FF] focus:outline-none transition-colors" />
+                   <input type="email" name="email" placeholder="hello@example.com" className="w-full bg-transparent border border-gray-600 rounded-full px-4 py-3 focus:border-[#CDB7FF] focus:outline-none transition-colors" required />
                 </div>
                 <div className="space-y-2">
                    <label className="text-sm text-gray-400">Phone</label>
-                   <input type="tel" placeholder="(000) 000-0000" className="w-full bg-transparent border border-gray-600 rounded-full px-4 py-3 focus:border-[#CDB7FF] focus:outline-none transition-colors" />
+                   <input type="tel" name="phone" placeholder="(000) 000-0000" className="w-full bg-transparent border border-gray-600 rounded-full px-4 py-3 focus:border-[#CDB7FF] focus:outline-none transition-colors" />
                 </div>
               </div>
               <div className="space-y-2">
                 <label className="text-sm text-gray-400">How Can We Help You?</label>
-                <select className="w-full bg-transparent border border-gray-600 rounded-full px-4 py-3 focus:border-[#CDB7FF] focus:outline-none transition-colors text-white">
-                  <option className="bg-gray-900">I need more leads (Local Business)</option>
-                  <option className="bg-gray-900">I need better data/ROI (SaaS)</option>
-                  <option className="bg-gray-900">Non-Profit / Fundraising Support</option>
-                  <option className="bg-gray-900">General Web Design</option>
+                <select name="subject" className="w-full bg-transparent border border-gray-600 rounded-full px-4 py-3 focus:border-[#CDB7FF] focus:outline-none transition-colors text-white">
+                  <option className="bg-gray-900" value="I need more leads (Local Business)">I need more leads (Local Business)</option>
+                  <option className="bg-gray-900" value="I need better data/ROI (SaaS)">I need better data/ROI (SaaS)</option>
+                  <option className="bg-gray-900" value="Non-Profit / Fundraising Support">Non-Profit / Fundraising Support</option>
+                  <option className="bg-gray-900" value="General Web Design">General Web Design</option>
                 </select>
               </div>
               <div className="space-y-2">
                 <label className="text-sm text-gray-400">Message</label>
-                <textarea rows="4" placeholder="Tell us about your project..." className="w-full bg-transparent border border-gray-600 rounded-2xl px-4 py-3 focus:border-[#CDB7FF] focus:outline-none transition-colors"></textarea>
+                <textarea name="message" rows="4" placeholder="Tell us about your project..." className="w-full bg-transparent border border-gray-600 rounded-2xl px-4 py-3 focus:border-[#CDB7FF] focus:outline-none transition-colors" required></textarea>
               </div>
-              <button type="button" className="w-full bg-[#CDB7FF] text-black font-block text-xl py-4 rounded-full hover:scale-[1.02] transition-transform shadow-lg shadow-[#CDB7FF]/20 flex items-center justify-center gap-2">
+              {formStatusText && (
+                <div className={`text-center py-3 px-4 rounded-lg font-medium`} style={{ color: formStatusColor, backgroundColor: formStatusColor === 'green' ? 'rgba(0, 255, 0, 0.1)' : formStatusColor === 'red' ? 'rgba(255, 0, 0, 0.1)' : 'rgba(51, 239, 92, 0.1)' }}>
+                  {formStatusText}
+                </div>
+              )}
+              <button type="submit" className="w-full bg-[#CDB7FF] text-black font-block text-xl py-4 rounded-full hover:scale-[1.02] transition-transform shadow-lg shadow-[#CDB7FF]/20 flex items-center justify-center gap-2">
                 <Send className="w-5 h-5" /> SUBMIT
               </button>
             </form>
