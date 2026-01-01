@@ -6,12 +6,39 @@ import {
   Eye, Send, Instagram, Twitter, Linkedin, ArrowRight 
 } from 'lucide-react';
 
-// --- DATA CONSTANTS ---
+// --- CONSTANTS ---
 
 const SERVICES_MENU = [
-  { id: 'seo', label: 'Technical SEO & Local Growth' },
-  { id: 'ads', label: 'Google & Social Ads' },
-  { id: 'branding', label: 'Branding & Non-Profit' },
+  {
+    id: 'seo',
+    label: 'Technical SEO & Local Growth',
+    bullets: ['Dominate local search (Beat your competitors)', 'Technical Audits for SaaS & E-commerce', 'Plain English Reporting - No Jargon.'],
+    Icon: BarChart2,
+    iconColor: 'text-[#A3CFFF]',
+    headingClass: 'neon-text-blue',
+    gradientClass: 'bg-gradient-to-tr from-blue-900 to-transparent opacity-50',
+    rotateClass: 'rotate-2'
+  },
+  {
+    id: 'ads',
+    label: 'Google & Social Ads',
+    bullets: ['Data-Driven ROI Focus', 'Lead Gen for High-Ticket B2B', 'Transparent Ad Spend Tracking'],
+    Icon: Target,
+    iconColor: 'text-[#F5A6C9]',
+    headingClass: 'neon-text-pink',
+    gradientClass: 'bg-gradient-to-bl from-pink-900 to-transparent opacity-50',
+    rotateClass: '-rotate-2'
+  },
+  {
+    id: 'branding',
+    label: 'Branding & Non-Profit',
+    bullets: ['Mission-Driven Storytelling', 'Google Ad Grants Management', 'Accessible Web Design'],
+    Icon: Heart,
+    iconColor: 'text-[#CDB7FF]',
+    headingClass: 'neon-text-lavender',
+    gradientClass: 'bg-gradient-to-r from-purple-900 to-transparent opacity-50',
+    rotateClass: 'rotate-1'
+  },
 ];
 
 const TESTIMONIALS = [
@@ -96,7 +123,7 @@ const PROJECTS = {
           <p className="text-gray-300 mb-4">Ananya needed consistent monthly donors to keep her programs running, but lacked the budget for big ad spends.</p>
           <h3 className="text-2xl font-block text-[#CDB7FF] mb-4">Our Approach</h3>
           <ul className="list-disc list-inside text-gray-300 space-y-2">
-            <li>Google Ad Grant Application ($10k/mo free ads)</li>
+            <li>Google Ad Grant Application (₹1000k/mo free ads)</li>
             <li>Emotional Storytelling Video Campaign</li>
             <li>Simplified Donation Checkout Flow</li>
           </ul>
@@ -105,7 +132,7 @@ const PROJECTS = {
           <h3 className="text-2xl font-block text-white mb-6">Impact</h3>
           <div className="space-y-6">
             <div>
-              <span className="text-4xl text-[#CDB7FF] font-bold">$10k</span>
+              <span className="text-4xl text-[#CDB7FF] font-bold">₹1000k</span>
               <p className="text-gray-400">Free Monthly Ad Spend Secured</p>
             </div>
             <div>
@@ -140,7 +167,7 @@ const PROJECTS = {
               <p className="text-gray-400">Return on Ad Spend (ROAS)</p>
             </div>
             <div>
-              <span className="text-4xl text-white font-bold">$500k</span>
+              <span className="text-4xl text-white font-bold">₹45000k</span>
               <p className="text-gray-400">Generated in Q4</p>
             </div>
           </div>
@@ -212,12 +239,23 @@ const PROJECTS = {
   }
 };
 
+// Small visual meta for project cards (keeps visual layout data separate)
+const PROJECT_CARDS = [
+  { id: 'saas', color: 'text-[#A3CFFF]', rotate: '-rotate-6', pos: 'top-0 left-4 md:left-20', z: 'z-10' },
+  { id: 'catering', color: 'text-[#FF8F8F]', rotate: 'rotate-3', pos: 'top-10 right-4 md:right-32', z: 'z-20' },
+  { id: 'nonprofit', color: 'text-[#CDB7FF]', rotate: '-rotate-3', pos: 'bottom-20 left-10 md:left-32', z: 'z-30' },
+  { id: 'ecommerce', color: 'text-[#F5A6C9]', rotate: 'rotate-6', pos: 'bottom-10 right-10 md:right-24', z: 'z-20' },
+  { id: 'corporate', color: 'text-[#FEF9A7]', rotate: '-rotate-2', pos: 'top-40 left-1/2 -translate-x-1/2', z: 'z-0' },
+  { id: 'app', color: 'text-[#B5F1CC]', rotate: 'rotate-2', pos: 'bottom-2 left-1/2 -translate-x-1/2', z: 'z-40' },
+];
+
 // --- MAIN APP COMPONENT ---
 
 export default function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeModal, setActiveModal] = useState(null);
+  const [showTestimonials, setShowTestimonials] = useState(true);
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
 
   // Handle Scroll Effect for Navbar
@@ -256,24 +294,12 @@ export default function App() {
     }
   }, [mobileMenuOpen, activeModal]);
 
-  /* Init EmailJS (replace with your public key if different)
-  useEffect(() => {
-    try {
-      (function() {
-        emailjs.init("1lC3uJcEscqQf7Rhe");
-      })();
-    } catch (err) {
-      console.warn('EmailJS init failed', err);
-    }
-  }, []);*/
-
   const formRef = useRef(null);
   const [formStatusText, setFormStatusText] = useState('');
   const [formStatusColor, setFormStatusColor] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setFormStatusText('Sending...');
     setFormStatusColor('#33ef5cff');
 
     const formEl = formRef.current;
@@ -311,7 +337,7 @@ export default function App() {
       
       if (response.ok) {
         console.log('✅ Form data saved to JSON file successfully');
-        setFormStatusText('✅ Message sent successfully!');
+        // 
         setFormStatusColor('green');
         formEl.reset();
       } else {
@@ -341,7 +367,6 @@ export default function App() {
           --pastel-green: #B5F1CC;
         }
 
-        /* Enforce fonts globally */
         body { font-family: 'Inter', sans-serif; }
         h1, h2, h3, h4, .font-block { font-family: 'Anton', sans-serif; letter-spacing: 1px; text-transform: uppercase; }
         
@@ -534,65 +559,33 @@ export default function App() {
       {/* 4️⃣ SERVICES SECTION */}
       <section id="services" className="py-20 bg-white/5">
         <div className="max-w-7xl mx-auto px-6 space-y-32">
-          {/* SEO */}
-          <div id="seo" className="flex flex-col md:flex-row items-center gap-12 scroll-mt-24">
-            <div className="w-full md:w-1/2 order-1">
-              <div className="chalk-border p-2 bg-[#1a1a1a] rotate-2 hover:rotate-0 transition-transform duration-500">
-                <div className="bg-gray-800 h-64 md:h-80 flex items-center justify-center overflow-hidden relative">
-                  <div className="absolute inset-0 bg-gradient-to-tr from-blue-900 to-transparent opacity-50"></div>
-                  <BarChart2 className="w-32 h-32 text-[#A3CFFF]" />
+          {SERVICES_MENU.map((s, idx) => {
+            const reverse = idx % 2 === 1;
+            // For odd-indexed services we want the text on the left and the card on the right on md+ screens
+            const imageOrder = reverse ? 'w-full md:w-1/2 order-1 md:order-2' : 'w-full md:w-1/2 order-1';
+            const textOrder = reverse ? 'w-full md:w-1/2 order-2 md:order-1' : 'w-full md:w-1/2 order-2';
+            const Icon = s.Icon;
+            return (
+              <div id={s.id} key={s.id} className="flex flex-col md:flex-row items-center gap-12 scroll-mt-24">
+                <div className={imageOrder}>
+                  <div className={`chalk-border p-2 bg-[#1a1a1a] ${s.rotateClass} hover:rotate-0 transition-transform duration-500`}>
+                    <div className="bg-gray-800 h-64 md:h-80 flex items-center justify-center overflow-hidden relative">
+                      <div className={`absolute inset-0 ${s.gradientClass}`}></div>
+                      <Icon className={`w-32 h-32 ${s.iconColor}`} />
+                    </div>
+                  </div>
+                </div>
+                <div className={textOrder}>
+                  <h3 className={`text-5xl ${s.headingClass} mb-6`}>{s.label}</h3>
+                  <ul className="space-y-4 text-lg text-gray-300 mb-8">
+                    {s.bullets.map(txt => (
+                      <li key={txt} className="flex items-center gap-3"><Check className={s.iconColor} /> {txt}</li>
+                    ))}
+                  </ul>
                 </div>
               </div>
-            </div>
-            <div className="w-full md:w-1/2 order-2">
-              <h3 className="text-5xl neon-text-blue mb-6">Technical SEO & Local Growth</h3>
-              <ul className="space-y-4 text-lg text-gray-300 mb-8">
-                {['Dominate local search (Beat your competitors)', 'Technical Audits for SaaS & E-commerce', 'Plain English Reporting - No Jargon.'].map(txt => (
-                  <li key={txt} className="flex items-center gap-3"><Check className="text-[#A3CFFF]" /> {txt}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          {/* ADS */}
-          <div id="ads" className="flex flex-col md:flex-row items-center gap-12 scroll-mt-24">
-            <div className="w-full md:w-1/2 order-2 md:order-1">
-              <h3 className="text-5xl neon-text-pink mb-6">Google & Social Ads</h3>
-              <ul className="space-y-4 text-lg text-gray-300 mb-8">
-                {['Data-Driven ROI Focus', 'Lead Gen for High-Ticket B2B', 'Transparent Ad Spend Tracking'].map(txt => (
-                  <li key={txt} className="flex items-center gap-3"><Check className="text-[#F5A6C9]" /> {txt}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="w-full md:w-1/2 order-1 md:order-2">
-              <div className="chalk-border p-2 bg-[#1a1a1a] -rotate-2 hover:rotate-0 transition-transform duration-500">
-                <div className="bg-gray-800 h-64 md:h-80 flex items-center justify-center overflow-hidden relative">
-                  <div className="absolute inset-0 bg-gradient-to-bl from-pink-900 to-transparent opacity-50"></div>
-                  <Target className="w-32 h-32 text-[#F5A6C9]" />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* BRANDING */}
-          <div id="branding" className="flex flex-col md:flex-row items-center gap-12 scroll-mt-24">
-            <div className="w-full md:w-1/2 order-1">
-              <div className="chalk-border p-2 bg-[#1a1a1a] rotate-1 hover:rotate-0 transition-transform duration-500">
-                <div className="bg-gray-800 h-64 md:h-80 flex items-center justify-center overflow-hidden relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-purple-900 to-transparent opacity-50"></div>
-                  <Heart className="w-32 h-32 text-[#CDB7FF]" />
-                </div>
-              </div>
-            </div>
-            <div className="w-full md:w-1/2 order-2">
-              <h3 className="text-5xl neon-text-lavender mb-6">Branding & Non-Profit</h3>
-              <ul className="space-y-4 text-lg text-gray-300 mb-8">
-                {['Mission-Driven Storytelling', 'Google Ad Grants Management', 'Accessible Web Design'].map(txt => (
-                  <li key={txt} className="flex items-center gap-3"><Check className="text-[#CDB7FF]" /> {txt}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
+            );
+          })}
         </div>
       </section>
 
@@ -604,25 +597,23 @@ export default function App() {
         </div>
 
         <div className="relative w-full max-w-5xl h-[700px] flex items-center justify-center">
-          {[
-            { id: 'saas', title: 'TECHFLOW', subtitle: 'SaaS Growth', color: 'text-[#A3CFFF]', rotate: '-rotate-6', pos: 'top-0 left-4 md:left-20', z: 'z-10' },
-            { id: 'catering', title: 'SPICECRAFT', subtitle: 'Local SEO', color: 'text-[#FF8F8F]', rotate: 'rotate-3', pos: 'top-10 right-4 md:right-32', z: 'z-20' },
-            { id: 'nonprofit', title: 'HOPE.ORG', subtitle: 'Donation Drive', color: 'text-[#CDB7FF]', rotate: '-rotate-3', pos: 'bottom-20 left-10 md:left-32', z: 'z-30' },
-            { id: 'ecommerce', title: 'LUXEFIT', subtitle: 'Fashion Store', color: 'text-[#F5A6C9]', rotate: 'rotate-6', pos: 'bottom-10 right-10 md:right-24', z: 'z-20' },
-            { id: 'corporate', title: 'APEX LAW', subtitle: 'Rebranding', color: 'text-[#FEF9A7]', rotate: '-rotate-2', pos: 'top-40 left-1/2 -translate-x-1/2', z: 'z-0' },
-            { id: 'app', title: 'ZEN APP', subtitle: 'App Launch', color: 'text-[#B5F1CC]', rotate: 'rotate-2', pos: 'bottom-2 left-1/2 -translate-x-1/2', z: 'z-40' },
-          ].map((p) => (
-            <div key={p.id} onClick={() => setActiveModal(p.id)} 
-                 className={`polaroid absolute bg-white p-3 shadow-2xl w-64 transform ${p.rotate} ${p.pos} ${p.z} cursor-pointer`}>
-              <div className="h-40 bg-gray-900 flex items-center justify-center overflow-hidden">
-                <span className={`font-block text-3xl ${p.color}`}>{p.title}</span>
+          {PROJECT_CARDS.map((p) => {
+            const fullTitle = PROJECTS[p.id]?.title || '';
+            const titleShort = fullTitle.split(' - ')[0]?.toUpperCase() || '';
+            const subtitle = fullTitle.split(' - ')[1] || PROJECTS[p.id]?.industry || '';
+            return (
+              <div key={p.id} onClick={() => setActiveModal(p.id)}
+                   className={`polaroid absolute bg-white p-3 shadow-2xl w-64 transform ${p.rotate} ${p.pos} ${p.z} cursor-pointer`}>
+                <div className="h-40 bg-gray-900 flex items-center justify-center overflow-hidden">
+                  <span className={`font-block text-3xl ${p.color}`}>{titleShort}</span>
+                </div>
+                <div className="pt-4 pb-2 px-2 text-black">
+                  <h4 className="text-xl font-bold">{subtitle}</h4>
+                  <p className="text-xs text-gray-600 mt-1">Click to view case study</p>
+                </div>
               </div>
-              <div className="pt-4 pb-2 px-2 text-black">
-                <h4 className="text-xl font-bold">{p.subtitle}</h4>
-                <p className="text-xs text-gray-600 mt-1">Click to view case study</p>
-              </div>
-            </div>
-          ))}
+            );
+          })}
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none">
             <div className="w-[500px] h-[500px] border border-white/5 rounded-full animate-pulse"></div>
           </div>
@@ -771,9 +762,11 @@ export default function App() {
                   {formStatusText}
                 </div>
               )}
-              <button type="submit" className="w-full bg-[#CDB7FF] text-black font-block text-xl py-4 rounded-full hover:scale-[1.02] transition-transform shadow-lg shadow-[#CDB7FF]/20 flex items-center justify-center gap-2">
-                <Send className="w-5 h-5" /> SUBMIT
-              </button>
+              <div className="flex flex-col gap-3">
+                <button type="submit" className="w-full bg-[#CDB7FF] text-black font-block text-xl py-4 rounded-full hover:scale-[1.02] transition-transform shadow-lg shadow-[#CDB7FF]/20 flex items-center justify-center gap-2">
+                  <Send className="w-5 h-5" /> SUBMIT
+                </button>
+              </div>
             </form>
           </div>
         </div>
@@ -791,7 +784,7 @@ export default function App() {
                <Linkedin className="w-5 h-5 text-gray-400 hover:text-[#F5A6C9]" />
             </div>
           </div>
-          <div className="flex gap-8 text-sm font-bold text-gray-400">
+          <div className="flex gap-8 text-sm font-bold text-gray-400 items-center">
             {['Services', 'Projects', 'Testimonials', 'Contact'].map(link => (
               <a key={link} href={`#${link.toLowerCase()}`} className="hover:text-white hover:underline decoration-[#CDB7FF] decoration-2 underline-offset-4 transition-all">{link}</a>
             ))}

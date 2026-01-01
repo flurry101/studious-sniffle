@@ -19,6 +19,7 @@ Thumbs.db
 logs/
 *.log
 form-submissions.json
+*.txt
 
 # Optional lockfiles
 package-lock.json
