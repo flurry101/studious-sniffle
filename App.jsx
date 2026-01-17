@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   Menu, X, ChevronDown, CassetteTape, MonitorSmartphone, 
   ArrowDown, Search, Compass, Palette, Rocket, TrendingUp, 
-  BarChart2, Check, Target, Heart, Phone, Mail, Headphones, 
+  BarChart2, Check, Target, Heart, Phone, Mail, Headphones,  
   Eye, Send, Instagram, Twitter, Linkedin, ArrowRight 
 } from 'lucide-react';
 
@@ -11,6 +11,7 @@ import {
 const SERVICES_MENU = [
   {
     id: 'seo',
+    value: 900,
     label: 'Technical SEO & Local Growth',
     bullets: ['Dominate local search (Beat your competitors)', 'Technical Audits for SaaS & E-commerce', 'Plain English Reporting - No Jargon.'],
     Icon: BarChart2,
@@ -21,8 +22,9 @@ const SERVICES_MENU = [
   },
   {
     id: 'ads',
+    value: 1100,
     label: 'Google & Social Ads',
-    bullets: ['Data-Driven ROI Focus', 'Lead Gen for High-Ticket B2B', 'Transparent Ad Spend Tracking'],
+    bullets: [ 'Data-Driven ROI Focus', 'Lead Gen for High-Ticket B2B', 'Transparent Ad Spend Tracking'],
     Icon: Target,
     iconColor: 'text-[#F5A6C9]',
     headingClass: 'neon-text-pink',
@@ -31,8 +33,9 @@ const SERVICES_MENU = [
   },
   {
     id: 'branding',
+    value: 800,
     label: 'Branding & Non-Profit',
-    bullets: ['Mission-Driven Storytelling', 'Google Ad Grants Management', 'Accessible Web Design'],
+    bullets: [ 'Mission-Driven Storytelling', 'Google Ad Grants Management', 'Accessible Web Design'],
     Icon: Heart,
     iconColor: 'text-[#CDB7FF]',
     headingClass: 'neon-text-lavender',
@@ -239,7 +242,6 @@ const PROJECTS = {
   }
 };
 
-// Small visual meta for project cards (keeps visual layout data separate)
 const PROJECT_CARDS = [
   { id: 'saas', color: 'text-[#A3CFFF]', rotate: '-rotate-6', pos: 'top-0 left-4 md:left-20', z: 'z-10' },
   { id: 'catering', color: 'text-[#FF8F8F]', rotate: 'rotate-3', pos: 'top-10 right-4 md:right-32', z: 'z-20' },
@@ -255,8 +257,9 @@ export default function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeModal, setActiveModal] = useState(null);
-  const [showTestimonials, setShowTestimonials] = useState(true);
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
+  
+  
 
   // Handle Scroll Effect for Navbar
   useEffect(() => {
@@ -298,12 +301,25 @@ export default function App() {
   const [formStatusText, setFormStatusText] = useState('');
   const [formStatusColor, setFormStatusColor] = useState('');
 
+  const [selectedServices, setSelectedServices] = useState([]);
+
+  // this is the logic for the selecting services and adding prices  
+  const totalValue = selectedServices.reduce((sum, serviceId) => {
+    const service = SERVICES_MENU.find(s => s.id === serviceId);
+    return sum + (service?.value || 0);
+  }, 0);
+
+
+
+
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormStatusColor('#33ef5cff');
 
     const formEl = formRef.current;
-
+    
+    
     // Build a plain object of the form values
     const formData = {
       first_name: formEl.elements['first_name']?.value || '',
@@ -314,6 +330,7 @@ export default function App() {
       message: formEl.elements['message']?.value || '',
       timestamp: new Date().toISOString()
     };
+
 
     // Log all form data to console
     console.log('=== CONTACT FORM SUBMISSION ===');
@@ -353,6 +370,7 @@ export default function App() {
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
 
   return (
+    
     <div className="font-sans text-[#f0f0f0] bg-[#121212] overflow-x-hidden relative" style={{ fontFamily: "'Inter', sans-serif" }}>
       {/* --- STYLES & FONTS --- */}
       <style>{`
@@ -555,10 +573,11 @@ export default function App() {
           </div>
         </div>
       </section>
-
+      
       {/* 4️⃣ SERVICES SECTION */}
       <section id="services" className="py-20 bg-white/5">
         <div className="max-w-7xl mx-auto px-6 space-y-32">
+   
           {SERVICES_MENU.map((s, idx) => {
             const reverse = idx % 2 === 1;
             // For odd-indexed services we want the text on the left and the card on the right on md+ screens
@@ -566,7 +585,10 @@ export default function App() {
             const textOrder = reverse ? 'w-full md:w-1/2 order-2 md:order-1' : 'w-full md:w-1/2 order-2';
             const Icon = s.Icon;
             return (
-              <div id={s.id} key={s.id} className="flex flex-col md:flex-row items-center gap-12 scroll-mt-24">
+                <div id={s.id} key={s.id} className={`flex flex-col md:flex-row items-center gap-12 scroll-mt-24 
+                    ${selectedServices.includes(s.id) ? 'ring-2 ring-green-400 rounded-xl p-4' : ''} `}
+                  >
+                
                 <div className={imageOrder}>
                   <div className={`chalk-border p-2 bg-[#1a1a1a] ${s.rotateClass} hover:rotate-0 transition-transform duration-500`}>
                     <div className="bg-gray-800 h-64 md:h-80 flex items-center justify-center overflow-hidden relative">
@@ -575,6 +597,7 @@ export default function App() {
                     </div>
                   </div>
                 </div>
+
                 <div className={textOrder}>
                   <h3 className={`text-5xl ${s.headingClass} mb-6`}>{s.label}</h3>
                   <ul className="space-y-4 text-lg text-gray-300 mb-8">
@@ -582,12 +605,42 @@ export default function App() {
                       <li key={txt} className="flex items-center gap-3"><Check className={s.iconColor} /> {txt}</li>
                     ))}
                   </ul>
+                  <button className={`mt-6 px-6 py-3 rounded-full font-semibold transition-all
+                    ${selectedServices.includes(s.id)?'bg-green-500 text-black': 'border border-white/30 hover:bg-white/10'}`}
+                    onClick={() =>setSelectedServices(prev =>prev.includes(s.id)? prev.filter(id => id !== s.id):[...prev, s.id])}>
+                      {selectedServices.includes(s.id) ? 'Added to Plan ✓' : 'Add to Plan'}
+                </button>
                 </div>
               </div>
             );
           })}
         </div>
       </section>
+
+      {/*Logic for when a certain service is selected, show that it IS selected and its value, 
+      and if total is more than 1000 display below services section, that  eligible for 10% off*/}
+
+      {selectedServices.length > 0 && (
+        <div className="text-center py-4 bg-white/10 rounded-lg mx-auto max-w-2xl">
+          <p className="text-xl font-bold mb-3">Your Growth Plan</p>
+          {selectedServices.map(serviceId => {
+            const service = SERVICES_MENU.find(s=>s.id===serviceId);
+            return (<p key={serviceId} className="text-lg"> {service?.label}: <span className="font-bold">
+              Starting at ₹{service?.value.toLocaleString()}</span></p>);
+          })}
+          <p className="text-xl mt-4">Estimated Monthly Investment: <span className="font-bold">₹{totalValue.toLocaleString()}</span></p>
+            <div className="text-center mt-8">
+              <a href="#contact" 
+              className="inline-block px-8 py-4 rounded-full bg-white text-black font-bold hover:scale-105 transition-transform">
+              Discuss this plan with us</a>
+            <p className="text-xs text-white/60 mt-2 ">Final pricing depends on scope and goals.</p>
+          </div>
+        </div>
+      )}
+
+
+
+      
 
       {/* 5️⃣ PROJECTS SECTION */}
       <section id="projects" className="py-24 overflow-hidden relative min-h-[90vh] flex flex-col items-center justify-center">
@@ -763,6 +816,7 @@ export default function App() {
                 </div>
               )}
               <div className="flex flex-col gap-3">
+
                 <button type="submit" className="w-full bg-[#CDB7FF] text-black font-block text-xl py-4 rounded-full hover:scale-[1.02] transition-transform shadow-lg shadow-[#CDB7FF]/20 flex items-center justify-center gap-2">
                   <Send className="w-5 h-5" /> SUBMIT
                 </button>
@@ -788,6 +842,7 @@ export default function App() {
             {['Services', 'Projects', 'Testimonials', 'Contact'].map(link => (
               <a key={link} href={`#${link.toLowerCase()}`} className="hover:text-white hover:underline decoration-[#CDB7FF] decoration-2 underline-offset-4 transition-all">{link}</a>
             ))}
+            
           </div>
         </div>
       </footer>
