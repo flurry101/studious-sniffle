@@ -3,8 +3,9 @@ import {
   Menu, X, ChevronDown, CassetteTape, MonitorSmartphone, 
   ArrowDown, Search, Compass, Palette, Rocket, TrendingUp, 
   BarChart2, Check, Target, Heart, Phone, Mail, Headphones,  
-  Eye, Send, Instagram, Twitter, Linkedin, ArrowRight 
+  Eye, Send, Instagram, Twitter, Linkedin, ArrowRight, LogIn 
 } from 'lucide-react';
+import LoginPage from './src/LoginPage';
 
 // --- CONSTANTS ---
 
@@ -257,6 +258,7 @@ export default function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeModal, setActiveModal] = useState(null);
+  const [loginOpen, setLoginOpen] = useState(false);
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   
   
@@ -476,6 +478,9 @@ export default function App() {
                 {['Projects', 'Testimonials', 'Contact'].map(item => (
                   <a key={item} href={`#${item.toLowerCase()}`} className="font-block text-lg hover:text-[#F5A6C9] transition-colors">{item}</a>
                 ))}
+                <button onClick={() => setLoginOpen(true)} className="flex items-center gap-2 bg-[#CDB7FF]/10 border border-[#CDB7FF] text-[#CDB7FF] px-4 py-2 rounded-full hover:bg-[#CDB7FF] hover:text-black transition-all font-semibold">
+                  <LogIn className="w-4 h-4" /> Sign In
+                </button>
               </div>
             </div>
 
@@ -499,6 +504,9 @@ export default function App() {
             {item}
           </a>
         ))}
+        <button onClick={() => { setLoginOpen(true); toggleMobileMenu(); }} className="mobile-nav-link flex items-center gap-2 bg-[#CDB7FF] text-black px-6 py-3 rounded-full font-block hover:scale-105 transition-all">
+          <LogIn className="w-5 h-5" /> SIGN IN
+        </button>
         <div className="mobile-nav-link mt-8 flex gap-8">
            <Instagram className="w-6 h-6 text-gray-400 hover:text-white" />
            <Twitter className="w-6 h-6 text-gray-400 hover:text-white" />
@@ -688,6 +696,9 @@ export default function App() {
           </div>
         </div>
       )}
+
+      {/* LOGIN PAGE MODAL */}
+      <LoginPage isOpen={loginOpen} onClose={() => setLoginOpen(false)} />
 
       {/* 6️⃣ META SECTION */}
       <section className="py-12 border-t border-b border-white/10 bg-white/5">
