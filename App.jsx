@@ -262,8 +262,6 @@ export default function App() {
   const [loginOpen, setLoginOpen] = useState(false);
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   
-  
-
   // Handle Scroll Effect for Navbar
   useEffect(() => {
     const handleScroll = () => {
@@ -321,6 +319,7 @@ export default function App() {
     e.preventDefault();
     setIsLoading(true);
     setFormStatusText('');
+
     const formEl = formRef.current;
     
     const formData = {
@@ -480,9 +479,9 @@ export default function App() {
                 {['Projects', 'Testimonials', 'Contact'].map(item => (
                   <a key={item} href={`#${item.toLowerCase()}`} className="font-block text-lg hover:text-[#F5A6C9] transition-colors">{item}</a>
                 ))}
-                <button onClick={() => setLoginOpen(true)} className="flex items-center gap-2 bg-[#CDB7FF]/10 border border-[#CDB7FF] text-[#CDB7FF] px-4 py-2 rounded-full hover:bg-[#CDB7FF] hover:text-black transition-all font-semibold">
+                {/*<button onClick={() => setLoginOpen(true)} className="flex items-center gap-2 bg-[#CDB7FF]/10 border border-[#CDB7FF] text-[#CDB7FF] px-4 py-2 rounded-full hover:bg-[#CDB7FF] hover:text-black transition-all font-semibold">
                   <LogIn className="w-4 h-4" /> Sign In
-                </button>
+                </button>*/}
               </div>
             </div>
 
@@ -506,9 +505,9 @@ export default function App() {
             {item}
           </a>
         ))}
-        <button onClick={() => { setLoginOpen(true); toggleMobileMenu(); }} className="mobile-nav-link flex items-center gap-2 bg-[#CDB7FF] text-black px-6 py-3 rounded-full font-block hover:scale-105 transition-all">
+        {/*<button onClick={() => { setLoginOpen(true); toggleMobileMenu(); }} className="mobile-nav-link flex items-center gap-2 bg-[#CDB7FF] text-black px-6 py-3 rounded-full font-block hover:scale-105 transition-all">
           <LogIn className="w-5 h-5" /> SIGN IN
-        </button>
+        </button>*/}
         <div className="mobile-nav-link mt-8 flex gap-8">
            <Instagram className="w-6 h-6 text-gray-400 hover:text-white" />
            <Twitter className="w-6 h-6 text-gray-400 hover:text-white" />
