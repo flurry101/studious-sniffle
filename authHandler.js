@@ -6,7 +6,6 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const LOGIN_FILE = path.join(__dirname, 'logins.json');
 const SIGNUP_FILE = path.join(__dirname, 'signups.json');
 
-// Initialize filesemail if they don't exist
 const initializeFile = (filePath) => {
   if (!fs.existsSync(filePath)) {
     fs.writeFileSync(filePath, JSON.stringify([], null, 2));

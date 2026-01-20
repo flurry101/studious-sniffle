@@ -16,16 +16,13 @@ export default function LoginPage({ isOpen, onClose }) {
     setIsLoading(true);
     setError('');
     setSuccess('');
-
     try {
       if (isSignup) {
-        // Check if email or name already exists in signup file
+        // check if email or name already exists in signup file
         const signupResponse = await fetch('http://localhost:4000/signups');
         const existingSignups = await signupResponse.json();
-        
         const emailExists = existingSignups.some(signup => signup.email.toLowerCase() === email.toLowerCase());
         const nameExists = existingSignups.some(signup => signup.name.toLowerCase() === name.toLowerCase());
-
         if (emailExists) {
           setError('❌ This email is already registered. Please sign in or use a different email.');
           setIsLoading(false);
@@ -37,19 +34,16 @@ export default function LoginPage({ isOpen, onClose }) {
           return;
         }
       } else {
-        // For login, check if email exists in logins.json
+        // for login, check if email exists in logins.json
         const loginResponse = await fetch('http://localhost:4000/logins');
         const existingLogins = await loginResponse.json();
-        
         const loginExists = existingLogins.some(login => login.email.toLowerCase() === email.toLowerCase());
-
         if (!loginExists) {
           setError('❌ Email not found. Please sign up first or check your email.');
           setIsLoading(false);
           return;
         }
       }
-
       const endpoint = isSignup ? 'http://localhost:4000/save-signup' : 'http://localhost:4000/save-login';
       const payload = isSignup 
         ? { name, email, password, timestamp: new Date().toISOString() }
